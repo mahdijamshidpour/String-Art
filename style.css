@@ -1,49 +1,352 @@
+/* Modern Dark Theme - Black & Red */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+    color: #ffffff;
+    font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    font-weight: 400;
+    line-height: 1.6;
+}
+
+.container {
+    background: rgba(0, 0, 0, 0.8);
+    border-radius: 20px;
+    margin: 20px auto;
+    max-width: 1200px;
+    padding: 30px;
+    box-shadow: 0 20px 40px rgba(255, 0, 0, 0.1);
+    border: 1px solid #333;
+}
+
+.jumbotron {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    border-radius: 15px;
+    padding: 40px;
+    margin-bottom: 30px;
+    border: 1px solid #333;
+    box-shadow: 0 10px 30px rgba(255, 0, 0, 0.1);
+}
+
+.jumbotron h2 {
+    color: #ff4444;
+    font-size: 2.5rem;
+    font-weight: 300;
+    margin-bottom: 20px;
+    text-shadow: 0 0 20px rgba(255, 68, 68, 0.3);
+}
+
+.jumbotron h5 {
+    color: #cccccc;
+    font-size: 1.2rem;
+    margin-bottom: 25px;
+}
+
+.form-group label {
+    color: #ff4444;
+    font-weight: 600;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.form-control {
+    background: #1a1a1a;
+    border: 2px solid #333;
+    border-radius: 10px;
+    color: #ffffff;
+    padding: 12px 15px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    width: 100%;
+}
+
+.form-control:focus {
+    border-color: #ff4444;
+    box-shadow: 0 0 15px rgba(255, 68, 68, 0.3);
+    outline: none;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #ff4444 0%, #cc0000 100%);
+    border: none;
+    border-radius: 25px;
+    color: white;
+    font-weight: 600;
+    padding: 15px 30px;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(255, 68, 68, 0.3);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(255, 68, 68, 0.4);
+    background: linear-gradient(135deg, #ff5555 0%, #dd0000 100%);
+}
+
+.btn-file {
+    background: linear-gradient(135deg, #ff4444 0%, #cc0000 100%);
+    border: none;
+    border-radius: 25px;
+    color: white;
+    font-weight: 600;
+    padding: 15px 30px;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    display: inline-block;
+    text-decoration: none;
+    box-shadow: 0 5px 15px rgba(255, 68, 68, 0.3);
+}
+
+.btn-file:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(255, 68, 68, 0.4);
+    background: linear-gradient(135deg, #ff5555 0%, #dd0000 100%);
+    color: white;
+    text-decoration: none;
+}
+
 .hidden {
     display: none;
 }
 
 .center {
     margin: auto;
-    width: 75%;
-    border: 3px solid lightgray;
-    padding: 10px;
+    width: 100%;
+    max-width: 800px;
+    border: 2px solid #333;
+    border-radius: 15px;
+    padding: 20px;
+    background: rgba(26, 26, 26, 0.8);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
 .centerBorderless {
     margin: auto;
-    width: 75%;
-    padding: 10px;
+    width: 100%;
+    max-width: 800px;
+    padding: 20px;
 }
 
-.centerImage{
+.centerImage {
     padding-left: 0;
     padding-right: 0;
     margin-left: auto;
     margin-right: auto;
     display: block;
-    width: 500px;
+    width: 100%;
+    max-width: 500px;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
 
 .centerCanvasMedium {
-padding-left: 0;
-padding-right: 0;
-margin-left: auto;
-margin-right: auto;
-display: block;
-width: 500px;
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    width: 100%;
+    max-width: 500px;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
 
 .centerCanvasLarge {
-padding-left: 0;
-padding-right: 0;
-margin-left: auto;
-margin-right: auto;
-display: block;
-width: 800px;
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    width: 100%;
+    max-width: 800px;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
 
 textarea {
     display: block;
     margin-left: auto;
     margin-right: auto;
+    background: #1a1a1a;
+    border: 2px solid #333;
+    border-radius: 10px;
+    color: #ffffff;
+    padding: 15px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    width: 100%;
+    max-width: 500px;
+    resize: vertical;
+}
+
+textarea:focus {
+    border-color: #ff4444;
+    box-shadow: 0 0 15px rgba(255, 68, 68, 0.3);
+    outline: none;
+}
+
+.caption {
+    color: #ff4444;
+    font-weight: 600;
+    font-size: 1.2rem;
+    text-align: center;
+    margin: 20px 0;
+    text-shadow: 0 0 10px rgba(255, 68, 68, 0.3);
+}
+
+button {
+    background: linear-gradient(135deg, #ff4444 0%, #cc0000 100%);
+    border: none;
+    border-radius: 20px;
+    color: white;
+    font-weight: 600;
+    padding: 12px 25px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(255, 68, 68, 0.3);
+    margin: 5px;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(255, 68, 68, 0.4);
+    background: linear-gradient(135deg, #ff5555 0%, #dd0000 100%);
+}
+
+/* Mobile Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        margin: 10px;
+        padding: 20px;
+        border-radius: 15px;
+    }
+    
+    .jumbotron {
+        padding: 25px;
+        margin-bottom: 20px;
+    }
+    
+    .jumbotron h2 {
+        font-size: 2rem;
+        text-align: center;
+    }
+    
+    .jumbotron h5 {
+        text-align: center;
+        font-size: 1.1rem;
+    }
+    
+    .center {
+        width: 100%;
+        padding: 15px;
+        margin: 10px 0;
+    }
+    
+    .centerImage,
+    .centerCanvasMedium,
+    .centerCanvasLarge {
+        width: 100%;
+        max-width: 100%;
+        height: auto;
+    }
+    
+    .form-control {
+        font-size: 16px; /* Prevents zoom on iOS */
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+    
+    .btn-primary,
+    .btn-file {
+        width: 100%;
+        margin: 10px 0;
+        padding: 15px;
+        font-size: 1.1rem;
+    }
+    
+    button {
+        width: 100%;
+        margin: 5px 0;
+        padding: 15px;
+        font-size: 1rem;
+    }
+    
+    textarea {
+        width: 100%;
+        max-width: 100%;
+        font-size: 14px;
+    }
+    
+    .caption {
+        font-size: 1.1rem;
+        margin: 15px 0;
+    }
+    
+    .row {
+        margin: 0;
+    }
+    
+    .col-md-4,
+    .col-md-6,
+    .col-sm-12 {
+        padding: 5px;
+    }
+}
+
+@media (max-width: 480px) {
+    .jumbotron h2 {
+        font-size: 1.8rem;
+    }
+    
+    .jumbotron h5 {
+        font-size: 1rem;
+    }
+    
+    .container {
+        margin: 5px;
+        padding: 15px;
+    }
+    
+    .jumbotron {
+        padding: 20px;
+    }
+}
+
+/* Loading Animation */
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+.loading {
+    animation: pulse 1.5s infinite;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #1a1a1a;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #ff4444;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #ff5555;
 }

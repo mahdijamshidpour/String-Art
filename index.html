@@ -1,42 +1,51 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
         <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no">
+        <meta name="theme-color" content="#ff4444">
+        <meta name="description" content="Transform your photos into stunning string art patterns. Upload any image and get its string art version instantly.">
 
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
         <link rel="stylesheet" type="text/css" href="style.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-        <title>String Art Generator</title>
+        <title>🎨 String Art Generator - Transform Images into Art</title>
     </head>
 <body>
     <div class="container">
         <div class="jumbotron" style="padding-bottom: 20px !important;">
-            <h2 id="status">Please wait: loading...</h2><br/>
-            <div><h5>Variables to play with:</h5></div>
+            <h2 id="status">🎨 String Art Generator</h2>
+            <div><h5>Transform your photos into stunning string art patterns</h5></div>
+            
             <div class="row">
-                <div class="col">
+                <div class="col-md-4 col-sm-12">
                     <div class="form-group">
-                        <label for="numberOfPins">Number of Pins</label>
-                        <input type="text" class="form-control" id="numberOfPins">
+                        <label for="numberOfPins">📌 Number of Pins</label>
+                        <input type="number" class="form-control" id="numberOfPins" placeholder="288" min="50" max="500">
                     </div>
                 </div>
-                <div class="col">
+                <div class="col-md-4 col-sm-12">
                     <div class="form-group">
-                        <label for="numberOfLines">Number of Lines</label>
-                        <input type="text" class="form-control" id="numberOfLines">
+                        <label for="numberOfLines">🧵 Number of Lines</label>
+                        <input type="number" class="form-control" id="numberOfLines" placeholder="4000" min="100" max="10000">
                     </div>
                 </div>
-                <div class="col">
+                <div class="col-md-4 col-sm-12">
                     <div class="form-group">
-                        <label for="lineWeight">Line Weight</label>
-                        <input type="text" class="form-control" id="lineWeight">
+                        <label for="lineWeight">⚖️ Line Weight</label>
+                        <input type="number" class="form-control" id="lineWeight" placeholder="20" min="1" max="50">
                     </div>
                 </div>
             </div>
-            <label class="btn btn-primary btn-file">
-                Click Here and select an Image to Start  <input type="file" id="fileInput" style="display: none;">
-            </label>
+            
+            <div class="text-center mt-4">
+                <label class="btn btn-primary btn-file">
+                    📁 Upload Image to Start  <input type="file" id="fileInput" style="display: none;" accept="image/*">
+                </label>
+            </div>
         </div>
         
         
@@ -55,27 +64,47 @@
                     <canvas class="centerCanvasLarge" id="canvasOutput2" ></canvas>
                 </div>
                 <div id="showPins" class="inputoutput center hidden">
-                    <textarea id="pinsOutput" rows="5" cols="50" style="width: 100%; max-width: 500px;"></textarea>
+                    <div class="caption">📋 Nail Sequence Generated</div>
+                    <textarea id="pinsOutput" rows="5" cols="50" style="width: 100%; max-width: 500px;" placeholder="Nail sequence will appear here..."></textarea>
                     <div class="centerBorderless">
                     </div><br/><br/>
-                    <div style="height: 30px; margin-bottom: 20px;">
-                        <button style="float: left;" onclick="startCreating();">Start Creating</button>
-                        <button style="float: right;" onclick="startDrawing();">Just Draw</button>
+                    <div class="row">
+                        <div class="col-md-6 col-sm-12 mb-2">
+                            <button class="btn btn-primary w-100" onclick="startCreating();">🎯 Start Creating</button>
+                        </div>
+                        <div class="col-md-6 col-sm-12 mb-2">
+                            <button class="btn btn-primary w-100" onclick="startDrawing();">🎨 Just Draw</button>
+                        </div>
                     </div>
-                    <div style="clear: both; margin-top: 20px;">
-                        <button style="margin-right: 10px;" onclick="downloadSequence();">Download Sequence</button>
-                        <button style="margin-right: 10px;" onclick="downloadFinalPicture();">Download Final Picture</button>
-                        <button onclick="generatePDF();">Generate PDF</button>
+                    <div class="row mt-3">
+                        <div class="col-md-4 col-sm-12 mb-2">
+                            <button class="btn btn-primary w-100" onclick="downloadSequence();">📥 Download Sequence</button>
+                        </div>
+                        <div class="col-md-4 col-sm-12 mb-2">
+                            <button class="btn btn-primary w-100" onclick="downloadFinalPicture();">🖼️ Download Image</button>
+                        </div>
+                        <div class="col-md-4 col-sm-12 mb-2">
+                            <button class="btn btn-primary w-100" onclick="generatePDF();">📄 Generate PDF</button>
+                        </div>
                     </div>
                 </div>
                 <div id="incrementalDrawing" class="inputoutput center hidden">
-                    <div class="caption">String Art Output:</div>
-                    <span id="incrementalCurrentStep"></span>
-                    <div id="drawStatus"></div>
+                    <div class="caption">🎨 String Art Creation</div>
+                    <div class="text-center mb-3">
+                        <span id="incrementalCurrentStep" class="badge badge-primary" style="font-size: 1rem; padding: 10px 20px; background: linear-gradient(135deg, #ff4444 0%, #cc0000 100%);"></span>
+                    </div>
+                    <div id="drawStatus" class="text-center mb-3"></div>
                     <canvas class="centerCanvasLarge" id="canvasOutput3" ></canvas>
-                    <div style="height: 30px;">
-                        <button style="float: left;" onclick="lastStep();">Last Step</button>
-                        <button style="float: right;" onclick="nextStep();">Next Step</button>
+                    <div class="row mt-3">
+                        <div class="col-6">
+                            <button class="btn btn-primary w-100" onclick="lastStep();">⬅️ Last Step</button>
+                        </div>
+                        <div class="col-6">
+                            <button class="btn btn-primary w-100" onclick="nextStep();">Next Step ➡️</button>
+                        </div>
+                    </div>
+                    <div class="text-center mt-3">
+                        <small class="text-muted">💡 Use arrow keys or space bar to navigate</small>
                     </div>
                 </div>
             </div>
