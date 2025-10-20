@@ -1,42 +1,51 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
         <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no">
+        <meta name="theme-color" content="#ff4444">
+        <meta name="description" content="Transform your photos into stunning string art patterns. Upload any image and get its string art version instantly.">
 
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
         <link rel="stylesheet" type="text/css" href="style.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-        <title>String Art Generator</title>
+        <title>String Art Generator - Transform Images into Art</title>
     </head>
 <body>
     <div class="container">
         <div class="jumbotron" style="padding-bottom: 20px !important;">
-            <h2 id="status">Please wait: loading...</h2><br/>
-            <div><h5>Variables to play with:</h5></div>
+            <h2 id="status">String Art Generator</h2>
+            <div><h5>Transform your photos into stunning string art patterns</h5></div>
+            
             <div class="row">
-                <div class="col">
+                <div class="col-md-4 col-sm-12">
                     <div class="form-group">
                         <label for="numberOfPins">Number of Pins</label>
-                        <input type="text" class="form-control" id="numberOfPins">
+                        <input type="number" class="form-control" id="numberOfPins" placeholder="288" min="50" max="500">
                     </div>
                 </div>
-                <div class="col">
+                <div class="col-md-4 col-sm-12">
                     <div class="form-group">
                         <label for="numberOfLines">Number of Lines</label>
-                        <input type="text" class="form-control" id="numberOfLines">
+                        <input type="number" class="form-control" id="numberOfLines" placeholder="4000" min="100" max="10000">
                     </div>
                 </div>
-                <div class="col">
+                <div class="col-md-4 col-sm-12">
                     <div class="form-group">
                         <label for="lineWeight">Line Weight</label>
-                        <input type="text" class="form-control" id="lineWeight">
+                        <input type="number" class="form-control" id="lineWeight" placeholder="20" min="1" max="50">
                     </div>
                 </div>
             </div>
-            <label class="btn btn-primary btn-file">
-                Click Here and select an Image to Start  <input type="file" id="fileInput" style="display: none;">
-            </label>
+            
+            <div class="text-center mt-4">
+                <label class="btn btn-primary btn-file">
+                    Upload Image to Start  <input type="file" id="fileInput" style="display: none;" accept="image/*">
+                </label>
+            </div>
         </div>
         
         
@@ -49,33 +58,131 @@
                     <div class="caption">Cropped and Grayscaled:</div>
                     <canvas class="centerCanvasMedium" id="canvasOutput" ></canvas>
                 </div>
-                <div id="step3" class="inputoutput center hidden">
-                    <div class="caption">String Art Output:</div>
-                    <div id="drawStatus"></div>
-                    <canvas class="centerCanvasLarge" id="canvasOutput2" ></canvas>
+        <div id="step3" class="inputoutput center hidden">
+            <div class="row">
+                <div class="col-md-6 col-sm-12 mb-4">
+                    <div class="image-container">
+                        <div class="caption">Original Image</div>
+                        <img id="originalImage" class="centerImage" alt="Original Image" style="display: none;">
+                        <div id="originalPlaceholder" class="image-placeholder">
+                            Original image will appear here
+                        </div>
+                    </div>
                 </div>
+                <div class="col-md-6 col-sm-12 mb-4">
+                    <div class="image-container">
+                        <div class="caption">Processed Image</div>
+                        <canvas class="centerCanvasMedium" id="canvasOutputProcessed" style="display: none; cursor: grab; border: 2px dashed #ff4444;" title="Drag to move image when zoomed"></canvas>
+                        <div id="processedPlaceholder" class="image-placeholder">
+                            Processed image will appear here
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Image Adjustment Controls -->
+            <div class="row mb-4" id="adjustmentControls" style="display: none;">
+                <div class="col-md-4 col-sm-12 mb-3">
+                    <div class="form-group">
+                        <label for="contrastSlider" class="text-white">Contrast</label>
+                        <input type="range" class="form-control-range" id="contrastSlider" min="0.5" max="2" step="0.1" value="1" oninput="adjustImage()">
+                        <small class="text-muted">Adjust image contrast</small>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-12 mb-3">
+                    <div class="form-group">
+                        <label for="zoomSlider" class="text-white">Zoom</label>
+                        <input type="range" class="form-control-range" id="zoomSlider" min="0.5" max="5" step="0.1" value="1" oninput="adjustImage()">
+                        <small class="text-muted">Adjust image zoom</small>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-12 mb-3">
+                    <div class="form-group">
+                        <label for="brightnessSlider" class="text-white">Brightness</label>
+                        <input type="range" class="form-control-range" id="brightnessSlider" min="0.5" max="2" step="0.1" value="1" oninput="adjustImage()">
+                        <small class="text-muted">Adjust image brightness</small>
+                    </div>
+                </div>
+            </div>
+            
+            
+            <!-- Start Button -->
+            <div class="text-center mb-4">
+                <button id="startButton" class="btn btn-primary btn-lg" onclick="startStringArtGeneration()" style="display: none;">
+                    Start String Art Generation
+                </button>
+            </div>
+            
+            <div class="caption">String Art Output</div>
+            <div id="drawStatus"></div>
+            <canvas class="centerCanvasLarge" id="canvasOutput2" ></canvas>
+        </div>
                 <div id="showPins" class="inputoutput center hidden">
-                    <textarea id="pinsOutput" rows="5" cols="50" style="width: 100%; max-width: 500px;"></textarea>
+                    <div class="caption">Nail Sequence Generated</div>
+                    <textarea id="pinsOutput" rows="5" cols="50" style="width: 100%; max-width: 500px;" placeholder="Nail sequence will appear here..."></textarea>
                     <div class="centerBorderless">
                     </div><br/><br/>
-                    <div style="height: 30px; margin-bottom: 20px;">
-                        <button style="float: left;" onclick="startCreating();">Start Creating</button>
-                        <button style="float: right;" onclick="startDrawing();">Just Draw</button>
+                    
+                    <!-- Simple checkbox for black/white strings -->
+                    <div class="text-center mb-3">
+                        <div class="form-check d-inline-block">
+                            <input class="form-check-input" type="checkbox" id="finalWhiteStrings" checked style="background-color: #000000; border-color: #ff4444; accent-color: #ff4444;">
+                            <label class="form-check-label text-white" for="finalWhiteStrings">
+                                <strong>Black background + White strings</strong>
+                            </label>
+                        </div>
                     </div>
-                    <div style="clear: both; margin-top: 20px;">
-                        <button style="margin-right: 10px;" onclick="downloadSequence();">Download Sequence</button>
-                        <button style="margin-right: 10px;" onclick="downloadFinalPicture();">Download Final Picture</button>
-                        <button onclick="generatePDF();">Generate PDF</button>
+                    
+                    <div class="row">
+                        <div class="col-md-6 col-sm-12 mb-2">
+                            <button class="btn btn-primary w-100" onclick="startCreating();">Start Creating</button>
+                        </div>
+                        <div class="col-md-6 col-sm-12 mb-2">
+                            <button class="btn btn-primary w-100" onclick="startDrawing();">Just Draw</button>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-4 col-sm-12 mb-2">
+                            <button class="btn btn-primary w-100" onclick="downloadSequence();">Download Sequence</button>
+                        </div>
+                        <div class="col-md-4 col-sm-12 mb-2">
+                            <button class="btn btn-primary w-100" onclick="downloadFinalPicture();">Download Image</button>
+                        </div>
+                        <div class="col-md-4 col-sm-12 mb-2">
+                            <button class="btn btn-primary w-100" onclick="generatePDF();">Generate PDF</button>
+                        </div>
                     </div>
                 </div>
                 <div id="incrementalDrawing" class="inputoutput center hidden">
-                    <div class="caption">String Art Output:</div>
-                    <span id="incrementalCurrentStep"></span>
-                    <div id="drawStatus"></div>
-                    <canvas class="centerCanvasLarge" id="canvasOutput3" ></canvas>
-                    <div style="height: 30px;">
-                        <button style="float: left;" onclick="lastStep();">Last Step</button>
-                        <button style="float: right;" onclick="nextStep();">Next Step</button>
+                    <div class="caption">String Art Creation</div>
+                    <div class="text-center mb-3">
+                        <span id="incrementalCurrentStep" class="badge badge-primary" style="font-size: 1rem; padding: 10px 20px; background: linear-gradient(135deg, #ff4444 0%, #cc0000 100%);"></span>
+                    </div>
+                    <div class="text-center mb-3">
+                        <div class="form-group">
+                            <label for="jumpToLine" class="text-white mb-2">Jump to Line:</label>
+                            <div class="input-group" style="max-width: 200px; margin: 0 auto;">
+                                <input type="number" class="form-control" id="jumpToLine" placeholder="Enter line number" min="0" max="10000" onkeypress="if(event.key==='Enter') jumpToSpecificLine()">
+                                <div class="input-group-append">
+                                    <button class="btn btn-primary" type="button" onclick="jumpToSpecificLine()">Go</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="position: relative; display: inline-block;">
+                        <canvas class="centerCanvasLarge" id="canvasOutput3" style="background-color: #ffffff; border-radius: 50%; border: 2px solid #ff4444;"></canvas>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-6">
+                            <button class="btn btn-primary w-100" onclick="lastStep();">Last Step</button>
+                        </div>
+                        <div class="col-6">
+                            <button class="btn btn-primary w-100" onclick="nextStep();">Next Step</button>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center mt-3">
+                        <small class="text-muted">Use arrow keys or space bar to navigate</small>
                     </div>
                 </div>
             </div>
@@ -96,10 +203,32 @@ let FILENAME = "";
 let SCALE = 20;
 let HOOP_DIAMETER = 0.625;
 
+// Drag functionality variables
+let isDragging = false;
+let dragStartX = 0;
+let dragStartY = 0;
+let imageOffsetX = 0;
+let imageOffsetY = 0;
+
 let img;
 
 // set up element variables
 let imgElement = document.getElementById("imageSrc")
+
+// Test: Make checkboxes visible immediately for debugging
+window.addEventListener('load', function() {
+    console.log('Page loaded, testing checkbox visibility...');
+    const controlsElement = document.getElementById('finalOutputControls');
+    if (controlsElement) {
+        console.log('Found finalOutputControls element');
+        // Make it visible for testing
+        controlsElement.style.display = 'block';
+        controlsElement.style.visibility = 'visible';
+        controlsElement.style.opacity = '1';
+    } else {
+        console.log('ERROR: finalOutputControls element not found on page load!');
+    }
+});
 let inputElement = document.getElementById("fileInput");
 inputElement.addEventListener("change", (e) => {
   imgElement.src = URL.createObjectURL(e.target.files[0]);
@@ -153,12 +282,20 @@ imgElement.onload = function() {
     showStep(1);
     showPins.classList.add('hidden');
     incrementalDrawing.classList.add('hidden');
+    
+    // Show original image
+    const originalImage = document.getElementById('originalImage');
+    const originalPlaceholder = document.getElementById('originalPlaceholder');
+    originalImage.src = imgElement.src;
+    originalImage.style.display = 'block';
+    originalPlaceholder.style.display = 'none';
+    
     // Take uploaded picture, square up and put on canvas
     base_image = new Image();
     base_image.src = imgElement.src;
     ctx.canvas.width = IMG_SIZE;
     ctx.canvas.height = IMG_SIZE;
-    ctx2.canvas.weight = IMG_SIZE * 2;
+     ctx2.canvas.width = IMG_SIZE * 2;
     ctx2.canvas.height = IMG_SIZE * 2;
     ctx.clearRect(0,0, IMG_SIZE, IMG_SIZE);
 
@@ -198,21 +335,254 @@ imgElement.onload = function() {
     R.selection.data = rdata;
     ctx.putImageData(imgPixels, 0, 0, 0, 0, IMG_SIZE, IMG_SIZE);
 
-    //circle crop canvas
-    ctx.globalCompositeOperation='destination-in';
-    ctx.beginPath();
-    ctx.arc(IMG_SIZE/2,IMG_SIZE/2, IMG_SIZE/2, 0, Math.PI*2);
-    ctx.closePath();
-    ctx.fill();
+    // Show processed image (before circle crop)
+    const processedCanvas = document.getElementById('canvasOutputProcessed');
+    const processedPlaceholder = document.getElementById('processedPlaceholder');
+    processedCanvas.style.display = 'block';
+    processedPlaceholder.style.display = 'none';
+    
+    // Copy the processed canvas content to the display canvas
+    const processedCtx = processedCanvas.getContext('2d');
+    processedCtx.canvas.width = IMG_SIZE;
+    processedCtx.canvas.height = IMG_SIZE;
+    processedCtx.drawImage(ctx.canvas, 0, 0);
 
-    // start processing
-    NonBlockingCalculatePins();    
+    // Show step 3 with the processed image and start button
+    showStep(3);
+    
+    // Show the adjustment sliders
+    const adjustmentControls = document.getElementById('adjustmentControls');
+    if (adjustmentControls) {
+        adjustmentControls.style.display = 'block';
+        console.log('Adjustment controls shown');
+        // Apply initial adjustments
+        adjustImage();
+    } else {
+        console.log('Adjustment controls not found');
+    }
+    
+    
+    // Show the start button instead of automatically starting
+    document.getElementById('startButton').style.display = 'block';
+
+}
+
+// Function to adjust image based on slider values
+function adjustImage() {
+    if (!base_image) return;
+    
+    const contrast = parseFloat(document.getElementById('contrastSlider').value);
+    const zoom = parseFloat(document.getElementById('zoomSlider').value);
+    const brightness = parseFloat(document.getElementById('brightnessSlider').value);
+    
+    // Clear and resize canvas
+    ctx.canvas.width = IMG_SIZE;
+    ctx.canvas.height = IMG_SIZE;
+    ctx.clearRect(0, 0, IMG_SIZE, IMG_SIZE);
+    
+    // Draw full image without cropping (fit within canvas maintaining aspect ratio)
+    var selectedWidth = base_image.width;
+    var selectedHeight = base_image.height;
+
+    var scaleX = IMG_SIZE / base_image.width;
+    var scaleY = IMG_SIZE / base_image.height;
+    var scale = Math.min(scaleX, scaleY) * zoom;
+
+    var scaledWidth = base_image.width * scale;
+    var scaledHeight = base_image.height * scale;
+    var offsetX = (IMG_SIZE - scaledWidth) / 2;
+    var offsetY = (IMG_SIZE - scaledHeight) / 2;
+
+    ctx.drawImage(base_image, 0, 0, selectedWidth, selectedHeight,
+                  offsetX, offsetY, scaledWidth, scaledHeight);
+    
+    // Apply grayscale processing with brightness and contrast adjustments
+    var imgPixels = ctx.getImageData(0, 0, IMG_SIZE, IMG_SIZE);
+    var rdata = [];
+    for (var i = 0; i < imgPixels.data.length; i += 4) {
+        // Calculate grayscale value
+        var avg = (imgPixels.data[i] + imgPixels.data[i + 1] + imgPixels.data[i + 2]) / 3;
+        
+        // Apply brightness and contrast adjustments
+        var adjustedValue = ((avg - 128) * contrast + 128) * brightness;
+        adjustedValue = Math.max(0, Math.min(255, adjustedValue));
+        
+        imgPixels.data[i] = adjustedValue;
+        imgPixels.data[i + 1] = adjustedValue;
+        imgPixels.data[i + 2] = adjustedValue;
+        rdata.push(adjustedValue);
+    }
+    R.selection.data = rdata;
+    ctx.putImageData(imgPixels, 0, 0, 0, 0, IMG_SIZE, IMG_SIZE);
+    
+    // Update processed image display
+    const processedCanvas = document.getElementById('canvasOutputProcessed');
+    const processedCtx = processedCanvas.getContext('2d');
+    processedCtx.canvas.width = IMG_SIZE;
+    processedCtx.canvas.height = IMG_SIZE;
+    
+    // Copy the adjusted image to the processed canvas
+    processedCtx.drawImage(ctx.canvas, 0, 0);
+    
+    // Add drag functionality to processed canvas
+    addDragFunctionality(processedCanvas);
+}
+
+// Function to add drag functionality to canvas
+function addDragFunctionality(canvas) {
+    // Remove existing event listeners to avoid duplicates
+    canvas.removeEventListener('mousedown', handleMouseDown);
+    canvas.removeEventListener('mousemove', handleMouseMove);
+    canvas.removeEventListener('mouseup', handleMouseUp);
+    canvas.removeEventListener('mouseleave', handleMouseUp);
+    
+    // Add new event listeners
+    canvas.addEventListener('mousedown', handleMouseDown);
+    canvas.addEventListener('mousemove', handleMouseMove);
+    canvas.addEventListener('mouseup', handleMouseUp);
+    canvas.addEventListener('mouseleave', handleMouseUp);
+    
+    // Add touch support for mobile
+    canvas.addEventListener('touchstart', handleTouchStart);
+    canvas.addEventListener('touchmove', handleTouchMove);
+    canvas.addEventListener('touchend', handleTouchEnd);
+}
+
+// Mouse event handlers
+function handleMouseDown(e) {
+    isDragging = true;
+    dragStartX = e.clientX - imageOffsetX;
+    dragStartY = e.clientY - imageOffsetY;
+    e.target.style.cursor = 'grabbing';
+    e.preventDefault();
+}
+
+function handleMouseMove(e) {
+    if (isDragging) {
+        imageOffsetX = e.clientX - dragStartX;
+        imageOffsetY = e.clientY - dragStartY;
+        updateProcessedImage();
+        e.preventDefault();
+    }
+}
+
+function handleMouseUp(e) {
+    isDragging = false;
+    e.target.style.cursor = 'grab';
+    e.preventDefault();
+}
+
+// Touch event handlers for mobile
+function handleTouchStart(e) {
+    if (e.touches.length === 1) {
+        const touch = e.touches[0];
+        isDragging = true;
+        dragStartX = touch.clientX - imageOffsetX;
+        dragStartY = touch.clientY - imageOffsetY;
+        e.preventDefault();
+    }
+}
+
+function handleTouchMove(e) {
+    if (isDragging && e.touches.length === 1) {
+        const touch = e.touches[0];
+        imageOffsetX = touch.clientX - dragStartX;
+        imageOffsetY = touch.clientY - dragStartY;
+        updateProcessedImage();
+        e.preventDefault();
+    }
+}
+
+function handleTouchEnd(e) {
+    isDragging = false;
+    e.preventDefault();
+}
+
+// Function to draw the processed image with current settings
+function drawProcessedImage(ctx, contrast, zoom, brightness) {
+    if (!base_image) return;
+    
+    // Clear canvas
+    ctx.clearRect(0, 0, IMG_SIZE, IMG_SIZE);
+    
+    // Do not recenter image via zoom offset; keep full-image fit + drag offset only
+    const zoomOffset = 0;
+    const finalOffsetX = imageOffsetX;
+    const finalOffsetY = imageOffsetY;
+    
+    // Draw image with adjustments
+    ctx.save();
+    ctx.filter = `contrast(${contrast}) brightness(${brightness})`;
+    
+    var selectedWidth = base_image.width;
+    var selectedHeight = base_image.height;
+    var xOffset = 0;
+    var yOffset = 0;
+    
+    // Fit full image within canvas maintaining aspect ratio
+    var scaleX = IMG_SIZE / base_image.width;
+    var scaleY = IMG_SIZE / base_image.height;
+    var scale = Math.min(scaleX, scaleY) * zoom;
+    var scaledWidth = base_image.width * scale;
+    var scaledHeight = base_image.height * scale;
+    var offsetX = (IMG_SIZE - scaledWidth) / 2;
+    var offsetY = (IMG_SIZE - scaledHeight) / 2;
+    
+    ctx.drawImage(base_image, 0, 0, selectedWidth, selectedHeight,
+                  offsetX + finalOffsetX, offsetY + finalOffsetY, scaledWidth, scaledHeight);
+    ctx.restore();
+    
+    // Apply grayscale processing
+    var imgPixels = ctx.getImageData(0, 0, IMG_SIZE, IMG_SIZE);
+    var rdata = [];
+    for (var i = 0; i < imgPixels.data.length; i += 4) {
+        var avg = (imgPixels.data[i] + imgPixels.data[i + 1] + imgPixels.data[i + 2]) / 3;
+        imgPixels.data[i] = avg;
+        imgPixels.data[i + 1] = avg;
+        imgPixels.data[i + 2] = avg;
+        rdata.push(avg);
+    }
+    R.selection.data = rdata;
+    ctx.putImageData(imgPixels, 0, 0, 0, 0, IMG_SIZE, IMG_SIZE);
+    
+    // Draw circle preview
+    ctx.strokeStyle = '#ff4444';
+    ctx.lineWidth = 3;
+    ctx.setLineDash([5, 5]);
+    ctx.beginPath();
+    ctx.arc(IMG_SIZE/2, IMG_SIZE/2, IMG_SIZE/2 - 2, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.setLineDash([]);
+}
+
+// Function to update the processed image when dragging
+function updateProcessedImage() {
+    const contrast = parseFloat(document.getElementById('contrastSlider').value);
+    const zoom = parseFloat(document.getElementById('zoomSlider').value);
+    const brightness = parseFloat(document.getElementById('brightnessSlider').value);
+    
+    const processedCanvas = document.getElementById('canvasOutputProcessed');
+    const processedCtx = processedCanvas.getContext('2d');
+    
+    drawProcessedImage(processedCtx, contrast, zoom, brightness);
+}
+
+// New function to start string art generation when button is clicked
+function startStringArtGeneration() {
+    // Hide the start button
+    document.getElementById('startButton').style.display = 'none';
+    
+    // Show initial status
+    drawStatus.textContent = "Starting string art generation...";
+    
+    // Start the string art generation
+    NonBlockingCalculatePins();
 }
  
 function NonBlockingCalculatePins(){
     // set up necessary variables
     console.log("Calculating pins...");
-    status.textContent = "Calculating pins...";
+    drawStatus.textContent = "Calculating pins...";
     pin_coords = [];
     center = length / 2;
     radius = length / 2 - 1/2
@@ -227,8 +597,7 @@ function NonBlockingCalculatePins(){
             setTimeout(codeBlock, 0);
         } else {
             console.log('Done Calculating pins');
-            status.textContent = "Done Calculating pins";
-            showStep(2);
+            drawStatus.textContent = "Done Calculating pins";
             NonBlockingPrecalculateLines();
         }
     })();
@@ -237,7 +606,7 @@ function NonBlockingCalculatePins(){
 function NonBlockingPrecalculateLines(){
     // set up necessary variables
     console.log("Precalculating all lines...");
-    status.textContent = "Precalculating all lines...";
+    drawStatus.textContent = "Precalculating all lines...";
     line_cache_y = Array.apply(null, {length: (N_PINS * N_PINS)});
     line_cache_x = Array.apply(null, {length: (N_PINS * N_PINS)});
     line_cache_length = Array.apply(null, {length: (N_PINS * N_PINS)}).map(Function.call, function(){return 0;});
@@ -268,9 +637,8 @@ function NonBlockingPrecalculateLines(){
             setTimeout(codeBlock, 0);
         } else {
             console.log('Done Precalculating Lines');
-            status.textContent = "Done Precalculating Lines";
+            drawStatus.textContent = "Done Precalculating Lines";
             NonBlockingLineCalculator();
-            showStep(3);
         }
     })();
 }
@@ -278,7 +646,7 @@ function NonBlockingPrecalculateLines(){
 function NonBlockingLineCalculator(){
     // set up necessary variables
     console.log("Drawing Lines...");
-    status.textContent = "Drawing Lines...";
+    drawStatus.textContent = "Drawing Lines...";
     error = nj.ones([IMG_SIZE, IMG_SIZE]).multiply(0xff).subtract(nj.uint8(R.selection.data).reshape(IMG_SIZE, IMG_SIZE));
     img_result = nj.ones([IMG_SIZE, IMG_SIZE ]).multiply(0xff);    
     result = nj.ones([IMG_SIZE * SCALE, IMG_SIZE * SCALE]).multiply(0xff);
@@ -380,11 +748,120 @@ function Finalize() {
 
     cv.imshow('canvasOutput2', dst);
     console.log(line_sequence);
-    status.textContent = "Complete";
+    drawStatus.textContent = "Complete";
     pinsOutput.value = line_sequence;
     showPins.classList.remove('hidden');
+    
+    // Show final output controls
+    console.log('Showing final output controls...');
+    const controlsElement = document.getElementById('finalOutputControls');
+    if (controlsElement) {
+        controlsElement.style.display = 'block';
+        console.log('Final output controls shown');
+        // Force visibility for debugging
+        controlsElement.style.visibility = 'visible';
+        controlsElement.style.opacity = '1';
+    } else {
+        console.log('ERROR: finalOutputControls element not found!');
+    }
+    
+     // Add event listeners for final output controls
+     const whiteStringsCheckbox = document.getElementById('finalWhiteStrings');
+     
+     if (whiteStringsCheckbox) {
+        whiteStringsCheckbox.addEventListener('change', function() {
+            console.log('White strings checkbox changed!');
+            updateFinalOutput();
+        });
+        console.log('Added event listener to white strings checkbox');
+    } else {
+        console.log('ERROR: finalWhiteStrings checkbox not found!');
+    }
+    
     dst.delete(); result.delete();
     window.scrollTo({ top: 5000, left: 0, behavior: 'smooth' });
+}
+
+// Function to update final output based on checkbox settings
+ function updateFinalOutput() {
+     console.log('updateFinalOutput function called!');
+     const isWhiteStrings = document.getElementById('finalWhiteStrings').checked;
+     
+     console.log('Updating final output:', { isWhiteStrings });
+    
+    // Get the current canvas content
+    const canvas = document.getElementById('canvasOutput2');
+    const ctx = canvas.getContext('2d');
+    
+    // Clear the canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // Set background color
+    if (isWhiteStrings) {
+        // White strings on black background
+        ctx.fillStyle = '#000000';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+    } else {
+        // Black strings on white background
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
+    
+    
+    // Redraw the string art with new colors
+    redrawStringArt(isWhiteStrings);
+    
+    // Also update the main string art canvas (canvasOutput3) if it exists
+    const mainCanvas = document.getElementById('canvasOutput3');
+    if (mainCanvas) {
+        const mainCtx = mainCanvas.getContext('2d');
+        
+        // Clear and set background
+        mainCtx.clearRect(0, 0, mainCanvas.width, mainCanvas.height);
+        if (isWhiteStrings) {
+            mainCtx.fillStyle = '#000000';
+        } else {
+            mainCtx.fillStyle = '#ffffff';
+        }
+        mainCtx.fillRect(0, 0, mainCanvas.width, mainCanvas.height);
+        
+        
+        // Redraw string art on main canvas
+        redrawStringArtOnCanvas(mainCtx, isWhiteStrings);
+    }
+}
+
+// Function to redraw string art with specified colors
+function redrawStringArt(isWhiteStrings) {
+    const canvas = document.getElementById('canvasOutput2');
+    const ctx = canvas.getContext('2d');
+    
+    // Set stroke color
+    ctx.strokeStyle = isWhiteStrings ? '#ffffff' : '#000000';
+    ctx.lineWidth = 0.3;
+    
+    // Redraw all lines from the sequence
+    for (let i = 0; i < line_sequence.length - 1; i++) {
+        ctx.beginPath();
+        ctx.moveTo(pin_coords[line_sequence[i]][0] * 2, pin_coords[line_sequence[i]][1] * 2);
+        ctx.lineTo(pin_coords[line_sequence[i + 1]][0] * 2, pin_coords[line_sequence[i + 1]][1] * 2);
+        ctx.stroke();
+    }
+}
+
+// Function to redraw string art on any canvas
+function redrawStringArtOnCanvas(ctx, isWhiteStrings) {
+    // Set stroke color
+    ctx.strokeStyle = isWhiteStrings ? '#ffffff' : '#000000';
+    ctx.lineWidth = 0.3;
+    
+    // Redraw all lines from the sequence
+    for (let i = 0; i < line_sequence.length - 1; i++) {
+        ctx.beginPath();
+        ctx.moveTo(pin_coords[line_sequence[i]][0] * 2, pin_coords[line_sequence[i]][1] * 2);
+        ctx.lineTo(pin_coords[line_sequence[i + 1]][0] * 2, pin_coords[line_sequence[i + 1]][1] * 2);
+        ctx.stroke();
+    }
 }
 
 function getLineErr(arr, coords1, coords2){
@@ -596,29 +1073,75 @@ function nextStep(){
     //window.speechSynthesis.speak(new SpeechSynthesisUtterance(line_sequence[pointIndex + 1]));
 }
 
-function lastStep(){
-    if(pointIndex < 2){ return;}
-    pointIndex--;
-    pointIndex--;
-    ctx3.clearRect(0,0, IMG_SIZE * 2, IMG_SIZE * 2);
-    incrementalCurrentStep.textContent = "Current Line: " + (pointIndex + 1) + " |  Pin " + line_sequence[pointIndex] + " to " + line_sequence[pointIndex + 1];
+ function lastStep(){
+     if(pointIndex < 2){ return;}
+     pointIndex--;
+     pointIndex--;
+     ctx3.clearRect(0,0, IMG_SIZE * 2, IMG_SIZE * 2);
+     incrementalCurrentStep.textContent = "Current Line: " + (pointIndex + 1) + " |  Pin " + line_sequence[pointIndex] + " to " + line_sequence[pointIndex + 1];
+     
+     for(i=0; i < pointIndex; i++){
+         ctx3.beginPath();
+         ctx3.moveTo(pin_coords[line_sequence[i]][0] * 2, pin_coords[line_sequence[i]][1] * 2);
+         ctx3.lineTo(pin_coords[line_sequence[i + 1]][0] * 2, pin_coords[line_sequence[i + 1]][1] * 2);
+         ctx3.strokeStyle = "black";
+         ctx3.lineWidth = 0.3;
+         ctx3.stroke();
+     }
+     lastStepImage = ctx3.getImageData(0, 0, IMG_SIZE * 2, IMG_SIZE * 2);
+     pointIndex++;
+     ctx3.beginPath();
+     ctx3.moveTo(pin_coords[line_sequence[pointIndex - 1]][0] * 2, pin_coords[line_sequence[pointIndex - 1]][1] * 2);
+     ctx3.lineTo(pin_coords[line_sequence[pointIndex]][0] * 2, pin_coords[line_sequence[pointIndex]][1] * 2);
+     ctx3.strokeStyle = "#FF0000";
+     ctx3.lineWidth = 1;
+     ctx3.stroke();
+ }
+
+// Function to jump to a specific line number
+function jumpToSpecificLine() {
+    const jumpInput = document.getElementById('jumpToLine');
+    const targetLine = parseInt(jumpInput.value);
     
-    for(i=0; i < pointIndex; i++){
+    if (isNaN(targetLine) || targetLine < 0 || targetLine > MAX_LINES) {
+        alert('Please enter a valid line number between 0 and ' + MAX_LINES);
+        return;
+    }
+    
+    // Clear the canvas
+    ctx3.clearRect(0, 0, IMG_SIZE * 2, IMG_SIZE * 2);
+    
+    // Set background color based on checkbox
+    const isWhiteStrings = document.getElementById('finalWhiteStrings') ? document.getElementById('finalWhiteStrings').checked : true;
+    if (isWhiteStrings) {
+        ctx3.fillStyle = '#000000'; // Black background for white strings
+    } else {
+        ctx3.fillStyle = '#ffffff'; // White background for black strings
+    }
+    ctx3.fillRect(0, 0, IMG_SIZE * 2, IMG_SIZE * 2);
+    
+    // Set the point index to the target line
+    pointIndex = targetLine;
+    
+    // Draw all lines up to the target line
+    ctx3.strokeStyle = isWhiteStrings ? "white" : "black";
+    ctx3.lineWidth = 0.3;
+    
+    for (let i = 0; i < pointIndex; i++) {
         ctx3.beginPath();
         ctx3.moveTo(pin_coords[line_sequence[i]][0] * 2, pin_coords[line_sequence[i]][1] * 2);
         ctx3.lineTo(pin_coords[line_sequence[i + 1]][0] * 2, pin_coords[line_sequence[i + 1]][1] * 2);
-        ctx3.strokeStyle = "black";
-        ctx3.lineWidth = 0.3;
         ctx3.stroke();
     }
+    
+    // Update the display
+    incrementalCurrentStep.textContent = "Current Line: " + (pointIndex + 1) + " |  Pin " + line_sequence[pointIndex] + " to " + line_sequence[pointIndex + 1];
+    
+    // Save the current state
     lastStepImage = ctx3.getImageData(0, 0, IMG_SIZE * 2, IMG_SIZE * 2);
-    pointIndex++;
-    ctx3.beginPath();
-    ctx3.moveTo(pin_coords[line_sequence[pointIndex - 1]][0] * 2, pin_coords[line_sequence[pointIndex - 1]][1] * 2);
-    ctx3.lineTo(pin_coords[line_sequence[pointIndex]][0] * 2, pin_coords[line_sequence[pointIndex]][1] * 2);
-    ctx3.strokeStyle = "#FF0000";
-    ctx3.lineWidth = 1;
-    ctx3.stroke();
+    
+    // Clear the input field
+    jumpInput.value = '';
 }
 
 function CalculatePins(){
@@ -1088,6 +1611,26 @@ function formatSequenceForDisplay(sequence) {
     
     return lines.join('\n');
 }
+
+// Make controls visible for testing and add mobile support
+document.addEventListener('DOMContentLoaded', function() {
+    // Make controls visible immediately for testing
+    const adjustmentControls = document.getElementById('adjustmentControls');
+    if (adjustmentControls) {
+        adjustmentControls.style.display = 'block';
+        console.log('Controls made visible for testing');
+    }
+    
+    // Add mobile-friendly event listeners
+    const sliders = ['contrastSlider', 'zoomSlider', 'brightnessSlider'];
+    sliders.forEach(sliderId => {
+        const slider = document.getElementById(sliderId);
+        if (slider) {
+            slider.addEventListener('input', adjustImage);
+            slider.addEventListener('change', adjustImage);
+        }
+    });
+});
 </script>
 <script async src="opencv.js" onload="onOpenCvReady();" type="text/javascript"></script>
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
